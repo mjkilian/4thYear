@@ -1,0 +1,71 @@
+package classifiers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import datagroups.Group;
+import datagroups.VoteGroup;
+import datapoints.DataPoint;
+import datapoints.Politician;
+import datasets.DivisionsDataSet;
+
+public class VoteClassifier {
+	private DivisionsDataSet groups;
+	private VoteGroup priorVotes;
+	private List<BinaryVoteClassifier> classifiers;
+
+
+	public VoteClassifier(DivisionsDataSet d) {
+		classifiers = new ArrayList<BinaryVoteClassifier>();
+		groups = d;
+		
+		//find the number of votes
+		priorVotes = new VoteGroup(groups.noAttributes());
+		//calculate total MPs over all groups
+		int totalMPs = 0;
+		for(Group g : groups.getAllGroups()){
+			totalMPs += g.size();
+
+			//calculate prior probabilities of a certain vote in a division
+			//do this by creating a group with all MPs in it
+			//can use the methods for calculating the probability of a given vote
+			//to calculate prior vote values
+			for(int i = 0; i < g.size(); i++){
+				priorVotes.addDatapoint(g.getDatapoint(i));
+			}
+		}
+		priorVotes.buildProbabilityTable();
+		
+
+		//build binary classifiers
+		for(String label : groups.getLabels()){
+			double priorOfParty = (double) groups.getGroup(label).size() / (double) totalMPs; 
+			BinaryVoteClassifier bc = 
+					new BinaryVoteClassifier(label, priorOfParty, 
+							(VoteGroup) groups.getGroup(label), priorVotes);
+			classifiers.add(bc);
+		}
+	}
+
+
+
+	public String classify(DataPoint x){
+		Politician dataPoint = (Politician) x;
+		double bestProb = 0.0;
+		String bestLabel = "";
+		//try with each classifier
+		for(BinaryVoteClassifier c : classifiers){
+			double prob = c.likelihoodM(dataPoint);
+			if(prob > bestProb){
+				bestProb = prob;
+				bestLabel = c.getPartyName();
+			}
+		}
+		return bestLabel;
+	}
+	
+	public Group getGroup(String label){
+		return this.groups.getGroup(label);
+	}
+
+}

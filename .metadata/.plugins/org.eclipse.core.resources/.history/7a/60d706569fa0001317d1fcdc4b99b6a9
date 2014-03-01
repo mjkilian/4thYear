@@ -1,0 +1,9 @@
+package validators;
+
+import datasets.DataSet;
+
+public interface Validator {
+
+	public double kFoldValidation( int k);
+	public double looValidation();
+}

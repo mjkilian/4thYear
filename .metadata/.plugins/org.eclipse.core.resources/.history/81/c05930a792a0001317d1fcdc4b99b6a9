@@ -1,0 +1,133 @@
+package datasets;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import datagroups.Group;
+import datagroups.VoteGroup;
+import datapoints.DataPoint;
+import datapoints.Politician;
+
+public class DivisionsDataSet implements DataSet {
+	/**The groups in the dataset, indexed by label*/
+	private Map<String,Group> parties;
+	/**The total number of datapoints in the set*/
+	private int noDataPoints;
+	/**The size of the datapoints in the set*/
+	private int noAttributes;
+
+	public DivisionsDataSet() {
+		this.noAttributes = 0;
+		this.noDataPoints = 0;
+		parties = new HashMap<String,Group>();
+	}
+
+	@Override
+	public Group getGroup(String label) {
+		return parties.get(label);
+	}
+
+	@Override
+	public Collection<Group> getAllGroups() {
+		return parties.values();
+	}
+
+	@Override
+	public int noDataPoints() {
+		return this.noDataPoints;
+
+	}
+
+	@Override
+	public int noAttributes() {
+		return this.noAttributes;
+	}
+
+	
+
+	@Override
+	public void buildFromFile(String filename) {
+		
+		//read file
+		Scanner rowScan = ParserUtils.buildFileReader(filename);
+		String line = "";
+		String[] attrs;
+		
+		while(rowScan.hasNextLine()){
+			//add to the total of datapoints
+			this.noDataPoints++;
+
+			line = rowScan.nextLine(); //read next line
+			attrs = line.split(",");   //split up columns
+
+			//first and second column are name and party respectively
+			String party = attrs[1];
+			noAttributes = attrs.length - 2;
+
+			//build attributes into vector
+			int[] mp = new int[noAttributes];
+			for(int i = 2; i < attrs.length; i++){
+				mp[i-2] = Integer.parseInt(attrs[i]);
+			}
+			Politician p = new Politician(mp);
+			p.setLabel(party);
+			//see if the party already has a group
+			if(parties.containsKey(party)){
+				parties.get(party).addDatapoint(p);
+			}else{
+				parties.put(party, new VoteGroup(noAttributes));
+				parties.get(party).addDatapoint(p);
+			}
+		}
+
+
+	}
+
+	@Override
+	public Collection<String> getLabels() {
+		return this.parties.keySet();
+	}
+
+	@Override
+	public List<DataPoint> allDataPoints() {
+		List<DataPoint> allData = new ArrayList<DataPoint>();
+		List<List<DataPoint>> classes = new ArrayList<List<DataPoint>>();
+		for(Group g : parties.values()){
+			classes.add(g.allDataPoints());
+		}
+		
+		int i = 0;
+		while(i < noDataPoints){
+			for(int j = 0; j < parties.size(); j++){
+				if(classes.get(j).size() > 0){
+					allData.add(classes.get(j).remove(0));
+					i++;	
+				}
+			}
+		}
+		return allData;
+	}
+
+	@Override
+	public boolean addDataPoint(String label, DataPoint dp) {
+		if(!(dp instanceof Politician)){
+			System.err.println("Datapoint must be a politician");
+			return false;
+		}
+		if(parties.containsKey(label)){
+			parties.get(label).addDatapoint(dp);
+		}else{
+			parties.put(label, new VoteGroup(dp.noAttributes()));
+			parties.get(label).addDatapoint(dp);
+		}
+		
+		return true;
+	}
+	
+	
+
+}

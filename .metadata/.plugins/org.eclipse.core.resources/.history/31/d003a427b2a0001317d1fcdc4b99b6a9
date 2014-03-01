@@ -1,0 +1,31 @@
+package main;
+
+import classifiers.VoteClassifier;
+import datapoints.DataPoint;
+import datasets.DivisionsDataSet;
+import parsers.DivisionsParser;
+import validators.DivisionsValidator;
+
+public class Main {
+
+	public static void main(String args[]){
+		String filename = args[0];
+		int noAttributes = Integer.parseInt(args[1]);
+		
+		DivisionsDataSet ds = DivisionsParser.buildFromFile(filename, noAttributes);
+		
+		int noCorrect = 0;
+		VoteClassifier cl = new VoteClassifier(ds);
+		for(DataPoint d : ds.balancedData()){
+			if(d.getLabel().equals(cl.classify(d))){
+				noCorrect++;
+			}
+		}
+		System.out.println(noCorrect + " correct out of " + ds.noDataPoints());
+
+		DivisionsValidator dv = new DivisionsValidator(ds);
+		System.out.println("Avg Accuracy: " + dv.looValidation());
+	
+	}
+
+}

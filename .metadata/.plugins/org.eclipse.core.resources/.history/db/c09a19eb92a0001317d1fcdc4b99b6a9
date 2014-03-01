@@ -1,0 +1,9 @@
+package parsers;
+
+public static class DivisionsParser {
+
+	public DivisionsDataSet buildFromFile(String filename){
+		
+	}
+
+}

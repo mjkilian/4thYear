@@ -1,0 +1,29 @@
+package datasets;
+
+import java.util.Collection;
+import java.util.List;
+
+import datagroups.Group;
+import datapoints.DataPoint;
+
+public interface DataSet {
+	/**
+	 * Adds a datapoint to the dataset belonging to class label.
+	 * Returns true if the datapoint was added successfully.
+	 * False if it could no be added.
+	 * Note the point must have the same number of attributes as the
+	 * dataset allows.
+	 * @param label
+	 * @param dp
+	 * @return
+	 */
+	public boolean addDataPoint(String label, DataPoint dp);
+	public Group getGroup(String label);
+	public Collection<Group> getAllGroups();
+	public int noDataPoints();
+	public int noAttributes();
+	public Collection<String> getLabels();
+	public void buildFromFile(String filename);
+	public List<DataPoint> allDataPoints();
+	
+}

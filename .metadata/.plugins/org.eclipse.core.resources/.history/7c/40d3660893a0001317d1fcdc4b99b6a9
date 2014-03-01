@@ -1,0 +1,48 @@
+package parsers;
+
+import java.util.Scanner;
+
+import datagroups.VoteGroup;
+import datapoints.Politician;
+import datasets.DivisionsDataSet;
+
+public abstract class DivisionsParser {
+
+	public DivisionsDataSet buildFromFile(String filename,int noAttributes){
+		
+		//read file
+		Scanner rowScan = ParserUtils.buildFileReader(filename);
+		String line = "";
+		String[] attrs;
+		
+		while(rowScan.hasNextLine()){
+			//add to the total of datapoints
+			this.noDataPoints++;
+
+			line = rowScan.nextLine(); //read next line
+			attrs = line.split(",");   //split up columns
+
+			//first and second column are name and party respectively
+			String party = attrs[1];
+			noAttributes = attrs.length - 2;
+
+			//build attributes into vector
+			int[] mp = new int[noAttributes];
+			for(int i = 2; i < attrs.length; i++){
+				mp[i-2] = Integer.parseInt(attrs[i]);
+			}
+			Politician p = new Politician(mp);
+			p.setLabel(party);
+			//see if the party already has a group
+			if(parties.containsKey(party)){
+				parties.get(party).addDatapoint(p);
+			}else{
+				parties.put(party, new VoteGroup(noAttributes));
+				parties.get(party).addDatapoint(p);
+			}
+		}
+
+
+	}
+
+}

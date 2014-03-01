@@ -1,0 +1,33 @@
+package datapoints;
+
+
+public abstract class AbstractDataPoint implements DataPoint{
+	private int[] attrs;
+	private String label = "";
+	
+	public AbstractDataPoint(int[] attributes) {
+		attrs = attributes;
+	}
+
+	@Override
+	public int noAttributes() {
+		return attrs.length;
+	}
+
+	@Override
+	public int valueOfAttribute(int i) {
+		return attrs[i];
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+	
+	
+	
+
+}

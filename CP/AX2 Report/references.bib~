@@ -1,0 +1,34 @@
+@article{Opt1993,
+    title    = "{Optimal Scheduling in Film Production to Minimize Talent Hold Cost}",
+    author     = "T.C.E. Cheng, J.E. Diamond and B.M.T. LIN",
+    journal   = "Journal Of Optimization Theory and Applications",
+    volume   = "79",
+    number   = "3",
+    year      = "1993",
+    month    = "December",
+}
+
+@article{Smith2003,
+    author    = "Barbara M. Smith",
+    title     = "{Constraint Programming in Practice: Scheduling a Rehearsal}",
+    journal   = "Available online from http://www.dcs.st-and.ac.uk/ ̃apes",
+    year      = "2033",
+
+}
+
+@misc{Smith2005,
+    author    = "Barbara M. Smith",
+    title     = "{Caching Search States In Permutation Problems}",
+    year     = "2005",
+  
+}
+    
+@article{Informs2011,
+    author    = "Maria Garcia de la Banda, Peter J. Stuckey and Geoffrey Chu",
+    title     = "{Solving Talent Scheduling with Dynamic Programming",
+    journal   = "INFORMS Journal on Computing",
+    volume   = "23",
+    number   = "1",
+    pages    = "120-137",
+    year      = "2011",
+}

@@ -1,0 +1,104 @@
+package datasets;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import datagroups.Group;
+import datagroups.VoteGroup;
+import datapoints.DataPoint;
+import datapoints.Politician;
+
+public class DivisionsDataSet implements DataSet {
+	/**The groups in the dataset, indexed by label*/
+	private Map<String,Group> parties;
+	/**The total number of datapoints in the set*/
+	private int noDataPoints;
+	/**The size of the datapoints in the set*/
+	private int noAttributes;
+
+	public DivisionsDataSet(int noAttributes) {
+		this.noAttributes = noAttributes;
+		this.noDataPoints = 0;
+		parties = new HashMap<String,Group>();
+	}
+
+	@Override
+	public Group getGroup(String label) {
+		return parties.get(label);
+	}
+
+	@Override
+	public Collection<Group> getAllGroups() {
+		return parties.values();
+	}
+
+	@Override
+	public int noDataPoints() {
+		return this.noDataPoints;
+
+	}
+
+	@Override
+	public int noAttributes() {
+		return this.noAttributes;
+	}
+
+
+	@Override
+	public Collection<String> getLabels() {
+		return this.parties.keySet();
+	}
+
+	@Override
+	public List<DataPoint> balancedData() {
+		List<DataPoint> allData = new ArrayList<DataPoint>();
+		List<List<DataPoint>> classes = new ArrayList<List<DataPoint>>();
+		for(Group g : parties.values()){
+			VoteGroup gCopy = new VoteGroup(g.noAttributes());
+			for(DataPoint d : g.allDataPoints()){
+				gCopy.addDatapoint(d);
+			}
+			classes.add(gCopy.allDataPoints());
+		}
+		int i = 0;
+		while(i < noDataPoints){
+			for(int j = 0; j < parties.size(); j++){
+				if(classes.get(j).size() > 0){
+					allData.add(classes.get(j).remove(0));
+					i++;
+					System.out.println(i + " out of " + noDataPoints);
+				}
+			}
+		}
+		return allData;
+	}
+
+	@Override
+	public boolean addDataPoint(String label, DataPoint dp) {
+		if(dp.noAttributes() != this.noAttributes) return false;
+		
+		//make sure data is labelled correctly
+		dp.setLabel(label);
+		//check that the group exists
+		if(parties.containsKey(label)){
+			parties.get(label).addDatapoint(dp);
+		}else{
+			//create a new group
+			parties.put(label, new VoteGroup(this.noAttributes));
+			parties.get(label).addDatapoint(dp);
+		}
+		this.noDataPoints++; 
+		return true;
+	}
+	
+	public String toString(){
+		String output = "Dataset. Size : " + this.noDataPoints
+				 + " noAttributes: " + this.noAttributes;
+		return output;
+	}
+
+}

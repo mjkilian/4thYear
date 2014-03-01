@@ -1,0 +1,16 @@
+package main;
+
+import datasets.DivisionsDataSet;
+import parsers.DivisionsParser;
+
+public class Main {
+
+	public static void main(String args[]){
+		String filename = args[0];
+		int noAttributes = Integer.parseInt(args[1]);
+		
+		DivisionsDataSet ds = DivisionsParser.buildFromFile(filename, noAttributes);
+		System.out.println(ds.toString());
+	}
+
+}

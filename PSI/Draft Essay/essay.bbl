@@ -1,0 +1,62 @@
+\begin{thebibliography}{1}
+
+\bibitem{CurriculumIssuesEthicalHacking}
+Patricia Y. Logan \&~Allen Clarkson.
+\newblock {Teaching Students to Hack: Curriculum Issues in Information
+  Security}.
+\newblock {\em SIGCSE}, 2005.
+
+\bibitem{FacebookBugBounty}
+Facebook.
+\newblock {Facebook Bug Bounty}.
+\newblock
+  https://www.facebook.com/notes/facebook-security/an-update-on-our-bug-bounty%
+-program/10151508163265766.
+\newblock Accessed 16/11/2013.
+
+\bibitem{IsEthicalHackingEthical}
+Danish Jamil \& Muhammad Numan~Ali Khan.
+\newblock {Is Ethical Hacking Ethical?}
+\newblock {\em International Journal of Engineering Science and Technology
+  (IJEST)}, 40(3):769--780, April 2001.
+
+\bibitem{MicrosoftBugBounty}
+Microsoft.
+\newblock {Microsoft Bug Bounty}.
+\newblock http://technet.microsoft.com/en-us/security/dn425036.
+\newblock Accessed 16/11/2013.
+
+\bibitem{PalmerEthicalHacking}
+C.C. Palmer.
+\newblock {Ethical Hacking}.
+\newblock {\em IBM Systems Journal}, 3(5):3758--3763, May 2011.
+
+\bibitem{HackingTeaching}
+Brian~A. Pashel.
+\newblock {Teaching Students to Hack: Ethical Implications in Teaching Students
+  to Hack at the University Level}.
+\newblock In {\em Proceedings of the 3rd annual conference on information
+  security curriculum development}, pages 197--200. InfoSecSD, September 2006.
+
+\bibitem{HackersDictionary}
+Eric~S. Raymond.
+\newblock {The New Hacker's Dictionary v.4.3.3 (Jargon File)}.
+\newblock
+  http://www.proselex.net/documents/the\%20new\%20hacker\%27s\%20dictionary.pd%
+f, 2002.
+\newblock This is the jargon file provided free as a supplement to the full
+  book 'The New Hacker's Dictionary'. This file should be used when looking up
+  references, not the book.
+
+\bibitem{SecurityVetting}
+SJC.
+\newblock {Security Vetting Overview}.
+\newblock http://www.securityvetting.org.uk/.
+\newblock Accessed: 16/11/2013.
+
+\bibitem{HackingAndCyberCrime}
+Nataliya~B. Sukhai.
+\newblock {Hacking And Cybercrime}.
+\newblock In {\em InfoSecCD Conference’04}. InfoSecSD, October 2004.
+
+\end{thebibliography}

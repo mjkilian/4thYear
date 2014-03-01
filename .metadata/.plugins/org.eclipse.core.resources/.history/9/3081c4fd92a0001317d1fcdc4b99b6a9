@@ -1,0 +1,11 @@
+package parsers;
+
+import datasets.DivisionsDataSet;
+
+public abstract class DivisionsParser {
+
+	public DivisionsDataSet buildFromFile(String filename){
+		
+	}
+
+}

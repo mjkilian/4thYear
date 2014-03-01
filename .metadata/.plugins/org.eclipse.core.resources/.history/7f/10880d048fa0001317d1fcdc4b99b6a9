@@ -1,0 +1,10 @@
+package datapoints;
+
+public interface DataPoint{
+	public int noAttributes();
+	public int valueOfAttribute(int i);
+	
+	public String getLabel();
+	public void setLabel(String label);
+	
+}

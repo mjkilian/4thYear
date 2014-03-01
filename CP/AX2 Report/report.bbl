@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{Informs2011}
+Peter J.~Stuckey Maria Garcia de~la Banda and Geoffrey Chu.
+\newblock {Solving Talent Scheduling with Dynamic Programming}.
+\newblock {\em INFORMS Journal on Computing}, 23(1):120--137, 2011.
+
+\bibitem{Smith2005}
+Barbara~M. Smith.
+\newblock {Caching Search States In Permutation Problems}, 2005.
+
+\bibitem{Smith2003}
+Barbara~M. Smith.
+\newblock {Constraint Programming in Practice: Scheduling a Rehearsal}.
+\newblock {\em Available online from http://www.dcs.st-and.ac.uk/ ̃apes},
+  2033.
+
+\end{thebibliography}

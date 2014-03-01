@@ -1,0 +1,117 @@
+package anc;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Network {
+	private Map<String,NetworkNode> nodes;
+	
+	public Network(String filename){
+		//instantiate the node map
+		nodes = new HashMap<String,NetworkNode>();
+		
+		//set up scanner
+		File in = new File(filename);
+		Scanner scan = null;
+		try{
+		  scan = new Scanner(in);
+		}catch(IOException e){
+			System.err.println("Input file '"+ filename +"' not found");
+			System.exit(1);
+		}
+		
+		//first line of file is the list of networks
+		if(scan.hasNextLine()){
+			String[] names = scan.nextLine().split(" ");
+			for(String name : names){ //add each node
+				nodes.put(name, new NetworkNode(name));
+			}
+		}else{
+			System.err.println("Input file empty");
+			System.exit(1);
+		}
+		
+		//subsequent lines are links
+		try{
+			while(scan.hasNextLine()){
+				String line = scan.nextLine();
+				if(line.isEmpty()) break; //catch end of readable file
+				String[] link = line.split(" ");
+				
+				//suppose the link is of form (N1,N2,C)
+				//we must add data to both N1 and N2 telling
+				//them they can reach each other
+				String node1 = link[0];
+				String node2 = link[1];
+				int cost = Integer.parseInt(link[2]);
+				
+				//add from node1 to node2
+				NetworkNode n1 = nodes.get(node1);
+				n1.addLink(nodes.get(node2), cost);
+				//add from node2 to node1
+				NetworkNode n2 = nodes.get(node2);
+				n2.addLink(n1, cost);				
+			}
+		}catch(Exception e){
+			//fairly generic exception handler. triggered by a problem reading the file
+			System.err.println("Input file '" + filename+"' is not in an acceptable format");
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		//initialise routing tables
+		for(NetworkNode node: nodes.values()){
+			node.initialiseTable(nodes.values());
+		}
+	}
+	
+	/**Causes a vector exchange on the network.
+	 * Returns true if a change was made to any routing table
+	 * Returns false if the network is already stable (no changes)
+	 */
+	public boolean exchange(){
+		boolean change = false;
+		for(NetworkNode node : nodes.values()){
+			 if(node.updateRoutingTable()) change = true;
+		}
+		return change;
+	}
+	
+	public boolean destroyLink(String n1, String n2){
+		//use result of first destroy to check if link actually exists
+		if(nodes.get(n1).destroyLink(n2)){
+			nodes.get(n2).destroyLink(n1);
+			return true;
+		}
+		return false;
+	}
+	
+	public void printRoutingTables(){
+		for(NetworkNode node : nodes.values()){
+			System.out.println(node.routingTable());
+		}
+	}
+	
+	public void printLinks(){
+		for(NetworkNode node: nodes.values()){
+			System.out.println(node.links());
+		}
+	}
+	
+	public static void main(String[] args){
+		String filename = args[0];
+		Network network = new Network(filename);
+		while(network.exchange());
+		network.destroyLink("n1","n4");
+		network.printRoutingTables();
+		
+		while(network.exchange());
+		System.out.println("Network Stabilised!");
+		network.printRoutingTables();
+
+	}
+}

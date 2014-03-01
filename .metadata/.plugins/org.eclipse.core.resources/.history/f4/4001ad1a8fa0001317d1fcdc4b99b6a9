@@ -1,0 +1,13 @@
+package datapoints;
+
+public interface DataPoint{
+	/**No of attributes the datapoint has*/
+	public int noAttributes();
+	
+	/*Value of attribute i*/
+	public int valueOfAttribute(int i);
+	
+	public String getLabel();
+	public void setLabel(String label);
+	
+}

@@ -1,0 +1,19 @@
+package datagroups;
+
+import java.util.List;
+
+import datapoints.DataPoint;
+
+public interface Group {
+
+	public boolean addDatapoint(DataPoint d);
+	public void emptyGroup();
+	public int noAttributes();
+	public int size();
+	
+	public DataPoint getDatapoint(int index);
+	
+	public int getAttrValue(int datapointIndex, int attrIndex);
+	
+	public List<DataPoint> allDataPoints();
+}

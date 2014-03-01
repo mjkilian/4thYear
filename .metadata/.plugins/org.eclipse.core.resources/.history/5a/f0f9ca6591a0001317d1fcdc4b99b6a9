@@ -1,0 +1,19 @@
+package dataclasses.datasets;
+
+import java.util.Collection;
+import java.util.List;
+
+import datagroups.Group;
+import datapoints.DataPoint;
+
+public interface DataSet {
+	public boolean addDataPoint(String label, DataPoint dp);
+	public Group getGroup(String label);
+	public Collection<Group> getAllGroups();
+	public int noDataPoints();
+	public int noAttributes();
+	public Collection<String> getLabels();
+	public void buildFromFile(String filename);
+	public List<DataPoint> allDataPoints();
+	
+}

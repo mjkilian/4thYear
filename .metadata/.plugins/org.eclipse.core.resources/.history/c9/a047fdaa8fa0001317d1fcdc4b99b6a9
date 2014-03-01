@@ -1,0 +1,10 @@
+package datapoints;
+
+
+public class Politician extends AbstractDataPoint {
+
+	public Politician(int[] attributes) {
+		super(attributes);
+	}
+
+}

@@ -3,19 +3,28 @@ package anc;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class NetworkNode {
 	/**the name of this node*/
 	private String name;
+	
 	/**The routing table for this node. Key is the destination address. Value
 	 * is a (cost,forwarding address) pair
 	 */
 	private Map<String,TableEntry> table;
+	
+	/**
+	 * Temporary Table used for updating purposes
+	 */
+	private Map<String,TableEntry> tempTable;
+	
 	/**The links in which this node participates. Key is the name of an adjacent
 	 * node. Value is the a (cost, reference to adj node0 pair
 	 */
 	private Map<String,TableEntry> links;
 	
+	/**Construct a NetworkNode*/
 	public NetworkNode(String name){
 		this.name = name;
 		this.table = new HashMap<String,TableEntry>();
@@ -32,7 +41,6 @@ public class NetworkNode {
 	 * This class does not hold the destination address; it is expected that
 	 * a mapping be made from destination addresses to instances of TableEntry
 	 * such that the key is the destination address.
-	 * @author michael
 	 *
 	 */
 	private class TableEntry{
@@ -44,6 +52,11 @@ public class NetworkNode {
 			this.target = target;
 		}
 	}
+	
+	/**Initialise this nodes routing table, with only the routes to its
+	 * neighbours known.
+	 * @param nodeset the nodes in the network
+	 */
 	public void initialiseTable(Collection<NetworkNode> nodeset){
 		for(NetworkNode node: nodeset){
 			if(node == this){
@@ -125,9 +138,15 @@ public class NetworkNode {
 		return this.table.get(nodeName).cost;
 	}
 	
+	/**Find the next node in the route from this node to the destination.
+	 * 
+	 * @param destination
+	 * @return
+	 */
 	public NetworkNode nextHop(String destination){
 		return table.get(destination).target;
 	}
+	
 	/**Tells this node to fetch the routing tables from its adjacent nodes in a periodic update.
 	 * Update the routing table according to the procedure for distance vector routing.
 	 * Returns true if an update was made, false if not change was made
@@ -135,6 +154,9 @@ public class NetworkNode {
 	 * When these occur, a triggered update is used.
 	 */
 	public boolean updateRoutingTable(boolean splitHorizon){
+		//create a temporary copy of the routing table
+		deepCopyTables();
+		
 		boolean change = false;
 		//iterate over all links
 		for(TableEntry adjEntry: links.values()){
@@ -143,7 +165,7 @@ public class NetworkNode {
 			if(adjacent == null) continue; //link from this node to adjacent is broken
 			
 			//for each node in the network
-			for(String destination: table.keySet()){
+			for(String destination: tempTable.keySet()){
 				//destination is the name of the destination 
 				//node whose routing table entry
 				//we are attempting to update
@@ -160,7 +182,7 @@ public class NetworkNode {
 				}
 				
 				//look up the current known cost to the target
-				int currentCost = table.get(destination).cost;
+				int currentCost = tempTable.get(destination).cost;
 				
 				//the potential new cost is the cost from the adjacent node to 
 				//the target plus the cost from this node to the adjacent node
@@ -169,7 +191,7 @@ public class NetworkNode {
 				
 				//if the new cost is less than the old one, we update the table so that 
 				//the routing entry for our target node directs to the adjacent node
-				TableEntry routeEntry = table.get(destination);
+				TableEntry routeEntry = tempTable.get(destination);
 				if(newCost < currentCost){	
 					routeEntry.cost = newCost;
 					routeEntry.target= adjacent;
@@ -195,7 +217,10 @@ public class NetworkNode {
 	}
 	
 	
-	
+	/**Returns a printable represenation of this nodes routing table.
+	 * 
+	 * @return
+	 */
 	public String routingTable(){
 		String output = "";
 		output += this.name + " routing table:\n";
@@ -214,6 +239,8 @@ public class NetworkNode {
 		}
 		return output;
 	}
+	
+	/**Returns a printable representation of this nodes links*/
 	 public String links(){
 		 String output = "";
 		 output += this.name + " links:\n";
@@ -226,20 +253,41 @@ public class NetworkNode {
 		 return output;
 	 }
 	
+	/**
+	 * Returns the name of this node.
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**Get this nodes routing table.*/
 	public Map<String, TableEntry> getTable() {
 		return table;
 	}
-
+	
+	/**Get this nodes links*/
 	public Map<String, TableEntry> getLinks() {
 		return links;
 	}
 	
+	/**Take a deep copy of the routing table for use in an update*/
+	private void deepCopyTables(){
+		tempTable = new HashMap<String,TableEntry>();
+		for(Entry<String,TableEntry> kv : table.entrySet()){
+			TableEntry orig = kv.getValue();
+			TableEntry lCopy = new TableEntry(orig.cost,orig.target);
+			
+			tempTable.put(kv.getKey(), lCopy);
+		}
+	}
 	
-	
+	/**Finalises an update by replacing the routing table with the copy
+	 * which was updated.
+	 */
+	public void finaliseTable(){
+		table = tempTable;
+	}
 	
 	
 }

@@ -13,11 +13,21 @@ import events.FailureEvent;
 import events.NetworkEvent;
 
 public class Network {
-	private Map<String,NetworkNode> nodes; //set of nodes in network
-	private boolean splitHorizon; //flag for split horizon
+	/**The set of nodes in the network*/
+	private Map<String,NetworkNode> nodes;
+	
+	/**True if split horizon is active, false otherwise*/
+	private boolean splitHorizon; 
+	
+	/**Queue of events (link cost changes/failures) to occur as
+	 * the protocol executes
+	 */
 	private Queue<NetworkEvent> events;
+	
+	/**The current iteration of the protocol*/
 	private int currentIteration;
 	
+	/**Instantiates a Network from an input file*/
 	public Network(String filename,boolean splitHorizon){
 		//instantiate the node map
 		nodes = new HashMap<String,NetworkNode>();
@@ -89,9 +99,15 @@ public class Network {
 	 */
 	public boolean exchange(){
 		currentIteration++; //next iteration
-		boolean change = false;
+		boolean change = false; //whether or not a change occurs 
+		
+		//update each node, checking for a change in the routing tables.
 		for(NetworkNode node : nodes.values()){
 			 if(node.updateRoutingTable(splitHorizon)) change = true;
+		}
+		//turn temporary tables into current tables (synchronised update)
+		for(NetworkNode n : nodes.values()){
+			n.finaliseTable();
 		}
 		//cause any events to happen that should happen
 		boolean eventsLeft = true;
@@ -120,6 +136,7 @@ public class Network {
 				eventsLeft = false;
 			}
 		}
+		
 		return change;
 	}
 	
